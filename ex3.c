@@ -24,32 +24,139 @@ char types[NUM_OF_TYPES][TYPES_NAMES] = {"SUV", "Sedan", "Coupe", "GT"};
 #define deltas 6
 #define done 7
 
+int provideStats(int dayCounter,int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES])
+{
+    int totalSales = 0;
+    int whatBrand = 0;
+    int bestBrand = 0 ;
+    int salesType = 0;
+    int choice = 0 ;
+    int bestType = 0 ;
+    int suv=0;
+    int sedan=0;
+    int coupe=0;
+    int gt=0;
+    printf("What day would you like to analyze?\n");
+    scanf("%d",&choice);
+    while (choice < 0 || choice >= DAYS_IN_YEAR||choice >dayCounter)
+    {
+        printf("Please enter a valid day.\n");
+        printf("What day would you like to analyze?\n");
+        scanf("%d",&choice);
+    }
+    printf("In day number %d:\n",choice);
+    //here i sum up the total sales of each brand and type for a specific day
+    for (int i = 0; i < NUM_OF_BRANDS; i++)
+    {
+        for (int j = 0; j < NUM_OF_TYPES; j++)
+        {
+            totalSales= totalSales + cube[choice][i][j];
+        }
+    }
+    //here i sum up how much the best brand had sold
+    for (int i = 0; i < NUM_OF_BRANDS; i++)
+    {
+        // i define it here so it will also will reset everytime i move on to the next brand
+        int salesBrand = 0 ;
+        for (int j = 0; j < NUM_OF_TYPES; j++)
+        {
+            salesBrand= salesBrand + cube[choice][i][j];
+        }
+        if (salesBrand > bestBrand)
+        {
+            whatBrand = i;
+            bestBrand = salesBrand;
+        }
+
+    }
+
+    //here i sum up how much the best type had sold
+    for (int i = 0; i < NUM_OF_BRANDS; i++)
+    {
+        for (int j = 0; j < NUM_OF_TYPES; j++)
+        {
+            salesType= salesType + cube[choice][i][j];
+        }
+
+    }
+    // here are sum up  sales for each type
+    for (int i = 0; i < NUM_OF_BRANDS; i++)
+    {
+        if (i==0)
+        {
+            suv= suv + cube[choice][i][0];
+        }
+       if (i==1)
+       {
+           sedan= sedan + cube[choice][i][1];
+       }
+        if (i==2)
+        {
+            coupe= coupe + cube[choice][i][2];
+        }
+
+        if (i==3)
+        {
+           gt= gt + cube[choice][i][3];
+        }
+    }
+    // i use array for the total sums of the types so i could check  which is bigger
+    int arrType[]={suv,sedan,coupe,gt};
+    int bigger =0;
+    int bigType=0;
+    for (int i = 0; i < NUM_OF_BRANDS; i++)
+    {
+       if (arrType[i]>bigger)
+       {
+           bigger = arrType[i];
+           bigType = i;
+       }
+    }
+
+    printf("The sales total was %d\n",totalSales);
+    printf("The best sold brand with %d sales was ",bestBrand);
+    for(int i = 0; i < BRANDS_NAMES; i++)
+    {
+            printf("%s ", &brands[whatBrand][i]);
+    }
+    printf("\n");
+
+    printf("The best sold type with %d sales was ",bigger);
+    for(int i = 0; i < BRANDS_NAMES; i++)
+    {
+        printf("%s ", &brands[bigType][i]);
+    }
+    printf("\n");
+
+}
+
 void avaiableBrands(int days[],int dayCounter,char brands[][BRANDS_NAMES] ) {
     printf("No data for brands ");
     // here i print all the avaiable brands that the user can update
     for(int i = 0; i < NUM_OF_BRANDS; i++)
     {
-        if(days[i] == dayCounter)
+        if(days[i] != dayCounter)
         {
-            printf("%s ", &brands[i]);
+            printf("%s ", brands[i]);
         }
 
     }
-    printf("\n");
-    printf("Please complete the data\n");
+
+    printf("\nPlease complete the data\n");
 }
 int brandValid(int carBrand,int days[],int dayCounter)
 {
-    if (days[carBrand] == dayCounter)
-    {
-        return 1;
-    }
+
     if (carBrand < 0 || carBrand >= NUM_OF_BRANDS  ) {
         printf("This brand is not valid\n");
-        avaiableBrands(days,dayCounter,brands);
         return 0 ;
     }
 
+    if (days[carBrand] == dayCounter)
+    {
+        printf("This brand is not valid\n");
+        return 0;
+    }
 
     return 1;
 }
@@ -57,11 +164,16 @@ int brandValid(int carBrand,int days[],int dayCounter)
 
 
 // here i insert the data from the user to the specific car type
-void insertData(int dailySalesSum[],int days[],int dayCounter,int carBrand)
+void insertData(int dailySalesSum[],int days[],int dayCounter,int carBrand,int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES])
 {
     for(int i = 0; i < NUM_OF_TYPES; i++)
     {
         scanf("%d", &dailySalesSum[i]);
+    }
+    for(int k = 0; k < NUM_OF_TYPES; k++)
+    {
+        cube[dayCounter][carBrand][k] = dailySalesSum[k];
+
     }
     // i update the array of brands that represent the last day that that specific brand got updated
     days[carBrand] = dayCounter;
@@ -86,6 +198,7 @@ void printMenu(){
 
 
 int main() {
+    int static dayCounter = 0;
     // set a 3d cube of arrays
     int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES];
     // here i Initialize all its values to (-1)s.
@@ -98,7 +211,7 @@ int main() {
         }
     }
     //this is an array which represent the day which the specific brand still hasnt gotten its info from the user
-    int days[NUM_OF_BRANDS] = {0};
+    int days[NUM_OF_BRANDS] = {-1,-1,-1,-1,-1};
     int choice;
     printMenu();
     scanf("%d", &choice);
@@ -137,13 +250,14 @@ int main() {
 
             break;
         }
-            case addAll:
+
+        case addAll:
             {
                 // this will let me know when the user has entered the data for all the brands
                 int sumBrand=0;
-                int static dayCounter = 0;
                 int carBrand=0;
                 int dailySalesSum[NUM_OF_BRANDS]={0};
+
                 if(dayCounter < DAYS_IN_YEAR)
                 {
                     while (sumBrand < NUM_OF_BRANDS)
@@ -151,26 +265,28 @@ int main() {
                         avaiableBrands(days, dayCounter,brands);
                         scanf("%d", &carBrand);
 
-                        // i check if the user input is valid
-                        while(brandValid(carBrand,days,dayCounter)==0)
+                        while (!brandValid(carBrand, days, dayCounter))
                         {
-                            scanf("%d",&carBrand);
+                            avaiableBrands(dailySalesSum, dayCounter,brands);
+                            scanf("%d", &carBrand);
                         }
-                        // here i insert the data from the user to the specific car type
-                        insertData(dailySalesSum, days, dayCounter, carBrand);
-                        days[carBrand] = dayCounter;
-                        // i update the sumBrand
-                        sumBrand ++;
-                    }
-                    sumBrand = 0;
 
+                        insertData(dailySalesSum, days, dayCounter, carBrand,cube);
+                        sumBrand++;
+
+                    }
+                    dayCounter++;
                 }
-                dayCounter++;
+
                 break;
             }
 
             case stats:
+            {
+                provideStats(dayCounter,cube);
                 break;
+            }
+
             case print:
                 break;
             case insights:
