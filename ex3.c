@@ -288,8 +288,67 @@ int main() {
             }
 
             case print:
+            {
+
+                printf("*****************************************");
+
+                    for(int k = 0; k < NUM_OF_BRANDS; k++)
+                    {
+                        printf("Sales for %s:\n ", brands[k]);
+                        for(int j = 0; j < dayCounter; j++)
+                        {
+                            int suv=0;
+                            int sedan=0;
+                            int coupe=0;
+                            int gt=0;
+                            suv = cube[j][k][0];
+                            sedan= cube[j][k][1];
+                            coupe= cube[j][k][2];
+                            gt= cube[j][k][3];
+                            printf("Day %d- SUV: %d Sedan: %d Coupe: %d GT: %d\n",j,suv,sedan,coupe,gt);
+
+                        }
+                    }
+                printf("\n");
+                printf("\n");
+                printf("****************************************");
                 break;
-            case insights:
+            }
+        case insights:
+            {
+                int bestSeller = 0;
+                int currentSeller = 0;
+                int whatBrand = 0;
+
+                // do the whole loop NUM_OF_BRANDS times
+                for (int i = 0; i < NUM_OF_BRANDS; i++)
+                {
+                    currentSeller = 0;
+
+                    // i want to loop until the last updated day by the user
+                    for (int day = 0; day < dayCounter; day++)
+                    {
+                        for (int j = 0; j < NUM_OF_TYPES; j++)
+                        {
+                            // i store the data for each brand
+                            currentSeller =currentSeller+ cube[day][i][j];
+                        }
+                    }
+
+                    // checking which brand is the best seller by comparing the value to the current highest seller
+                    if (currentSeller > bestSeller)
+                    {
+                        bestSeller = currentSeller;
+                        // i want to know which brand at the end is the best seller
+                        whatBrand = i;
+                    }
+                }
+
+                // print the best-selling brand and its total sales
+                printf("The best-selling brand overall is %s: %d sales\n", brands[whatBrand], bestSeller);
+                break;
+            }
+
                 break;
             case deltas:
                 break;
