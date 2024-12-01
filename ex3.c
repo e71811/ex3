@@ -321,7 +321,9 @@ int main() {
                 int whatBrand = 0;
                 int bestType =0;
                 int whatType = 0;
-
+                int totalSum =0;
+                int bestSum =0;
+                int bestDay =-1;
                 // do the whole loop NUM_OF_BRANDS times
                 for (int i = 0; i < NUM_OF_BRANDS; i++)
                 {
@@ -362,17 +364,50 @@ int main() {
                         }
                     }
                     // checking which type is the best seller by comparing the value to the current highest seller
-                    if (typeSeller > bestType)
+                    if (totalSum > bestSum)
                     {
-                        bestType = typeSeller;
+                        bestSum = totalSum;
                         // i want to know which brand at the end is the best seller
                         whatType = i;
                     }
 
-                }
+
+                    // do the whole loop until i get to the day that wasnt updated already
+                    for (int j = 0; j < dayCounter; j++)
+                    {
+                        int daySum = 0 ;
+                        for (int i = 0; i < NUM_OF_BRANDS; i++)
+                        {
+
+
+                            // i want to loop until the last updated day by the user
+
+                                for (int k = 0; k < NUM_OF_TYPES; k++)
+                                {
+                                    // i sumup all the sales for the specific day
+                                    daySum =daySum+ cube[j][i][k];
+
+                                }
+
+                            // checking which day is the best seller by comparing the value to the current highest seller
+
+
+                        }
+                        // each time i finish summing up the day i compare it to the best day currently
+                        if ( daySum> bestSum)
+                        {
+                            bestSum = daySum;
+                            // i want to know which brand at the end is the best seller
+                            bestDay = j;
+                        }
+                    }
+
                 // print the best-selling brand and its total sales
                 printf("The best-selling brand overall is %s: %d sales\n", brands[whatBrand], bestSeller);
+                // print the best selling type and its total sales
                 printf("The best-selling type of car is %s: %d sales\n", types[whatType], bestType);
+                // print the most profitable day and his overall sales
+                printf("The most profitable day was day number %d:%d$",bestDay,bestSum);
                 break;
             }
 
