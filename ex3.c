@@ -1,11 +1,12 @@
 /******************
-Name:ilay helfgot
-ID:212398648
-Assignment: ex3
+Name: ilay helfgot
+ID: 212398648
+Assignment: ex2
 *******************/
 
+
 #include <stdio.h>
-#include <stdlib.h>
+
 
 #define NUM_OF_BRANDS 5
 #define BRANDS_NAMES 15
@@ -125,7 +126,7 @@ int main()
                 {
                     printf("Please enter a valid day.\n");
                     printf("What day would you like to analyze?\n");
-                    scanf("%d",&choice);
+                    scanf("%d",&day);
                 }
                 provideStats(cube,day);
                 break;
@@ -146,7 +147,7 @@ int main()
                 }
                 printf("\n");
                 printf("\n");
-                printf("****************************************\n");
+                printf("*****************************************\n");
                 break;
             }
         case insights:
@@ -342,7 +343,7 @@ void bestSellingBrand(int dayCounter,int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_O
         }
     }
     // print the best-selling brand and its total sales
-    printf("The best-selling brand overall is %s: %d sales\n", brands[whatBrand], bestSeller);
+    printf("The best-selling brand overall is %s: %d$\n", brands[whatBrand], bestSeller);
 }
 void bestSellingType(int dayCounter,int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES])
 {
@@ -372,7 +373,7 @@ void bestSellingType(int dayCounter,int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF
         }
     }
     // print the best selling type and its total sales
-    printf("The best-selling type of car is %s: %d sales\n", types[whatType], bestSeller);
+    printf("The best-selling type of car is %s: %d$\n", types[whatType], bestSeller);
 }
 void mostProfitableDay(int dayCounter,int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_OF_TYPES])
 {
@@ -403,5 +404,5 @@ void mostProfitableDay(int dayCounter,int cube[DAYS_IN_YEAR][NUM_OF_BRANDS][NUM_
     }
 
     // print the most profitable day and his overall sales
-    printf("The most profitable day was day number %d:%dsales$\n",bestDay+1,bestSum);
+    printf("The most profitable day was day number %d: %d$\n",bestDay+1,bestSum);
 }
